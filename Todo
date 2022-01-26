@@ -1,0 +1,2 @@
+- Fix creds variable not updating in index.js
+- Comment out code that isnt commented yet

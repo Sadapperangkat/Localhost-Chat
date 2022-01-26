@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - The big good chat</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+        #form {
+            width: 300px;
+            margin: 0 auto;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #form input[type="text"],
+        #form input[type="password"] {
+            width: 92.6%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #464EB8;
+            color: #fff;
+        }
+        #form input[type="submit"]:hover {
+            background-color: #7B83EB;
+        }
+        #form a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        #form a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <form id="form" action="">
+        <h2> Login </h2>
+        <input id="input" autocomplete="off" type="text" placeholder="Username..."/>
+        <input id="pass" class="pass" autocomplete="off" type="password" placeholder="Password..."/>
+        <span id="warn" style="color: red;"></span>
+        <input type="submit" type="login"/>
+        <span>Don't have an account? <a href="/register">Create one!</a></span>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');   
+        var pass = document.getElementById('pass');
+        var warn = document.getElementById('warn');
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function warning() {
+            await sleep(1000)
+            warn.innerText = 'Your username or password was incorrect.';
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            sessionStorage.setItem("name", '');
+            socket.emit('login', input.value + ':' + pass.value);
+            input.value = '';
+            pass.value = '';
+            warning();
+        });
+
+        socket.on('login', function(e) {
+            sessionStorage.setItem("name", e);
+            window.location.href = '/chat';
+            console.log(sessionStorage.getItem("name"));
+        });
+
+    </script>
+</body>
+</html>

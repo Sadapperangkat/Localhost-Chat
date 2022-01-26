@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The big good chat</title>
+    <style>
+      body { 
+        margin: 0; 
+        padding-bottom: 3rem; 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      }
+      h2 {
+        right: 1;
+        left: 0;
+      }
+      #form { 
+        border-bottom: 2px solid #464EB8;
+        padding: 0.25rem; 
+        position: fixed; 
+        bottom: 0; 
+        left: 0.2; 
+        right: 0; 
+        display: flex; 
+        height: 3rem; 
+        box-sizing: border-box; 
+        width: 82vw;
+        margin-bottom: 3rem;
+        margin-right: 5vw;
+        margin-left: 5vw;
+        backdrop-filter: blur(10px);
+      }
+      #input { 
+        border: 1px black solid; 
+        padding: 0 1rem;
+        flex-grow: 1; 
+        border-radius: 0.16rem; 
+        margin: 0.25rem;
+        height: 33px;
+      }
+      #input:focus { 
+        outline: none; 
+      }
+      #form > button { 
+        border: none; 
+        padding: 0 1rem; 
+        margin: 0.25rem; 
+        border-radius: 3px; 
+        outline: none; 
+        color: #fff; 
+        background-color: #FFF;
+        margin-top: 8.6px;
+      }
+      .sidebar {
+        left:0; 
+        right:1; 
+        width: 70px; 
+        position:fixed; 
+        bottom:0; 
+        top:0; 
+        /*background: #464EB8;*/
+        /*backdrop-filter: blur(10px);*/
+      }
+
+      #messages { 
+        list-style-type: none; 
+        margin: 0; 
+        padding: 0; 
+        margin-left:12vw; 
+        color: #000; 
+        margin-bottom: 15px;
+        padding-bottom: 3rem;
+      }
+      #messages > li { 
+        padding: 0.5rem 1rem; 
+      }
+      image{
+        height: 140%%;
+      }
+      button {
+        background-color: #FFF;
+        border: none;
+      }
+      #bottom{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2rem;
+        backdrop-filter: blur(10px);
+      }
+      .buttons {
+        position: fixed;
+        bottom: 0.8rem;
+        left: 13vw;
+        right: 0;
+        display: flex;
+        align-items: left;
+        height: 2rem;
+        backdrop-filter: blur(10px);
+      }
+      .buttons button {
+        background-color: #FFF;
+        border: none;
+        color: #000;
+        margin-right: 1vw;
+      }
+      .ham{
+        height: /*40px*/ 1px;
+        width: /*40px*/ 1px;
+        margin-left: 15px;
+      }
+    </style>
+</head>
+<body>
+    <ul id="messages"></ul>
+    <div id="bottom">
+      <form id="form" action="">
+        <input id="input" autocomplete="off" placeholder="Type a new message" /><button><image src="send.svg" onClick="submit"></image></button>
+      </form>
+      <br>
+      <div class="buttons">
+        <button onClick="bold()"><image src="/svg/bold.svg"></image></button>
+        <button onClick="italic()"><image src="/svg/italic.svg"></image></button>
+        <button onClick="underline()"><image src="/svg/underline.svg"></image></button>
+        <button onClick="small()"><image src="/svg/size.svg"></image></button>
+        <button onClick="strike()"><image src="/svg/strikethrough.svg"></image></button>
+      </div>
+    </div>
+    <div class="sidebar">
+      <img class="ham" src="/svg/ham.svg" alt="Sidebar hamburger">
+      <div class="sidebarContent">
+
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // values and vars
+        var socket = io();
+        var messages = document.getElementById('messages');
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');
+        const params = new URLSearchParams(window.location.search);
+        const name = sessionStorage.getItem("name");
+        var selection = document.getSelection();
+        //
+
+        // Checking if there isnt a name and redirecting to the login page
+        if(!name) {
+            window.location.href = '/';
+        }
+        //
+
+        // Admin
+        window.history.replaceState({}, document.title, window.location.pathname);
+        //
+
+        // Checking credentials
+        socket.on('checkcred', function(e) {
+            // check if e = f and redirect to chat
+            if(e == 'f') {
+                window.location.href = '/';
+            }
+        });
+        //
+
+        // Sending messages
+        form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+            socket.emit('chat message', name + ': ' + input.value);
+            input.value = '';
+            }
+        });
+        //
+
+        // Receiving messages
+        socket.on('chat message', function(msg) {
+            var item = document.createElement('li');
+            item.innerHTML = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        }); 
+        //
+
+        // Reciving chat history
+        socket.on('history', function(history, name1) {
+          if (name1 == name) {
+            for(var i = 0; i < history.length; i++) {
+                var item = document.createElement('li');
+                item.innerHTML = history[i];
+                messages.appendChild(item);
+            }
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+        });
+        //
+
+        // Sending chat history request
+        socket.emit('history request', name); 
+        //
+
+        // Markdown functions
+        function bold(){
+          if (selection == '') {
+            input.value = input.value;
+          } else {
+            input.value = "**"+selection+"**";
+          }
+        }
+        function italic(){
+          if (selection == '') {
+            input.value = input.value;
+          } else {
+            input.value = "*"+selection+"*";
+          }
+        }
+        function underline(){
+          if (selection == '') {
+            input.value = input.value;
+          } else {
+            input.value = "__"+selection+"__";
+          }
+        }
+        function small(){
+          if (selection == '') {
+            input.value = input.value;
+          } else {
+            input.value = "`"+selection+"`";
+          }
+        }
+        function strike(){
+          if (selection == '') {
+            input.value = input.value;
+          } else {
+            input.value = "~~"+selection+"~~";;
+          }
+        }
+        //
+    </script>
+</body>
+</html>

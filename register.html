@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - The big good chat</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+        #form {
+            width: 300px;
+            margin: 0 auto;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #form input[type="text"],
+        #form input[type="password"] {
+            width: 92.6%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #form input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #464EB8;
+            color: #fff;
+        }
+        #form input[type="button"]:hover {
+            background-color: #7B83EB;
+        }
+        #form a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        #form a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <form id="form">
+        <h2>Register</h2>
+        <input id="input" type="text" name="username" placeholder="Username">
+        <input id="pass" type="password" name="password" placeholder="Password">
+        <input id="pass2" type="password" name="password" placeholder="Confirm Password">
+        <input type="button" onclick="register()" value="Register">
+        <span>Allready have an account? <a href="/">Login</a></span>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');   
+        var pass = document.getElementById('pass');
+        var pass2 = document.getElementById('pass2');
+
+        function register(){
+            if(pass.innerText == pass2.innerText) {
+                console.log('passwords match');
+                socket.emit('name check', input.innerText);
+            } else{
+                console.log('Passwords do not match');
+            }
+        };
+        socket.on('name', function(e) {
+            if (e == 1){
+                var creds = input.value + ':' + pass.value;
+                socket.emit('register', creds);
+                sessionStorage.setItem("name", input.innerText);
+                window.location.href = '/chat';
+            } else{
+                console.log('Username already taken');
+            }
+        });
+
+    </script>
+</body>
+</html>
