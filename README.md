@@ -1,15 +1,16 @@
-# chat-example
+# Localhost Chat
 
-This is the source code for a very simple chat example used for
-the [Getting Started](http://socket.io/get-started/chat/) guide
-of the Socket.IO website.
+This is the source code for a locally hosted chat for people on your network to use
 
-Please refer to it to learn how to run this application.
+## Start
 
-You can also spin up a free Heroku dyno to test it out:
+Navigate to the directory of the code in your terminal and type `npm start`
+it should automatically run, click on the link that appears in the chat
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/socketio/chat-example)
+## Sharing
 
-Or run it on [Repl.it](https://repl.it/):
-
-[![Run on Repl.it](https://repl.it/badge/github/socketio/chat-example)](https://repl.it/github/socketio/chat-example)
+Windows:
+- press win + R to open run
+- type cmd and press enter
+- type ipconfig and copy your ipv4 Address
+- give to your friend to join with their web browser
