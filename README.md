@@ -5,7 +5,7 @@ This is the source code for a locally hosted chat for people on your network to 
 ## Start
 
 Navigate to the directory of the code in your terminal and type `npm start`
-it should automatically run, click on the link that appears in the chat
+it should automatically run, click on the link that appears in the console
 
 ## Sharing
 
