@@ -18,31 +18,17 @@ function split(data, split) {
 }
 //
 
-// Sleep function
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-//
-
 // Creds variables
 var credlines = split(creds, '\r\n').toString();
 var splitcred = split(credlines, ':').toString();
 var splitcreds = split(splitcred, ',');
-var users = users = splitcreds.filter(function(item, index) {
+var users = splitcreds.filter(function(item, index) {
     return index % 2 == 0;
 });
-var password = password = splitcreds.filter(function(item, index) {
+var password = splitcreds.filter(function(item, index) {
     return index % 2 == 1;
 });
 //
-
-// Creds function to update creds once they are changed
-async function credentials() {
-    creds = fs.readFileSync('credentials.txt', 'utf8');
-    await sleep(1010);
-    credentials();
-}
-credentials();
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html');
@@ -134,8 +120,8 @@ io.on('connection', (socket) => {
 // Register writing
 io.on('connection', (socket) => {
     socket.on('register', name => {
-        writeCreds(name + '\r\n');
-        credentials();
+        let e = name + '\r\n';
+        writeCreds(e);
         console.log('New user:' + name);
     });
 });
@@ -173,12 +159,24 @@ function writeHistory(chat) {
 //
 
 // Credential writing
-function writeCreds(creds) {
-    fs.appendFile("credentials.txt", creds, 'utf8', function(err) {
+function writeCreds(cred) {
+    fs.appendFile("credentials.txt", cred, 'utf8', function(err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
         }
+        var splitcred = split(cred, ':').toString();
+        var splitcreds = split(splitcred, ',');
+        var users1 = splitcreds.filter(function(item, index) {
+            return index % 2 == 0;
+        });
+        var password1 = splitcreds.filter(function(item, index) {
+            return index % 2 == 1;
+        });
+        users = users + users1;
+        password = password + password1;
+        creds = creds + cred;
+        console.log(creds);
     });
 }
 //
