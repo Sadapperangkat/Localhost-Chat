@@ -38,3 +38,21 @@ lochyj: Ok looks a little better
 john: hello
 lochyj: hi
 lochyj: this sucks
+lochyj: hello?
+lochyj: hi
+john: hi
+lochyj: lol
+lochyj: john
+john: im john yes
+lochyj: im using cloudflare tunnels
+lochyj: to i can have a secure connection
+lochyj: im working on a http router
+lochyj: so i can use it at school to use things like discord
+lochyj: ight i gtg now
+lochyj: so
+lochyj: ye
+lochyj: bey
+lochyj: bye
+john: ok
+lochyj: lol
+john: bye

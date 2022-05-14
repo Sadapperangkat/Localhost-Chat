@@ -42,24 +42,15 @@ app.get('/chat', (req, res) => {
 app.get('/send.svg', (req, res) => {
     res.sendFile(__dirname + '/send.svg');
 });
-app.get('/svg/bold.svg', (req, res) => {
-    res.sendFile(__dirname + '/svg/bold.svg');
-});
-app.get('/svg/italic.svg', (req, res) => {
-    res.sendFile(__dirname + '/svg/italic.svg');
-});
-app.get('/svg/underline.svg', (req, res) => {
-    res.sendFile(__dirname + '/svg/underline.svg');
-});
-app.get('/svg/size.svg', (req, res) => {
-    res.sendFile(__dirname + '/svg/size.svg');
-});
-app.get('/svg/strikethrough.svg', (req, res) => {
-    res.sendFile(__dirname + '/svg/strikethrough.svg');
-});
-app.get('/svg/ham.svg', (req, res) => {
-    res.sendFile(__dirname + '/svg/ham.svg');
-});
+app.use('/svg', express.static('svg'))
+
+app.get('/login/:name/:password', (req, res) => {
+    res.send(req.params);
+})
+
+app.get('/auth/:token', (req, res) => {
+    res.send(req.params);
+})
 
 // Login
 io.on('connection', (socket) => {
