@@ -74,7 +74,7 @@
         var pass2 = document.getElementById('pass2');
 
         function register(){
-            if(pass.innerText == pass2.innerText) {
+            if(pass.innerHTML === pass2.innerHTML) {
                 console.log('passwords match');
                 socket.emit('name check', input.innerText);
             } else{
