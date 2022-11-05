@@ -1,5 +1,6 @@
 // Other
-const app = require('express')();
+const express = require('express');
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 80;
@@ -25,9 +26,15 @@ var splitcreds = split(splitcred, ',');
 var users = splitcreds.filter(function(item, index) {
     return index % 2 == 0;
 });
+
+console.log(users)
+
 var password = splitcreds.filter(function(item, index) {
     return index % 2 == 1;
 });
+
+console.log(password);
+
 //
 
 app.get('/', (req, res) => {
@@ -58,9 +65,8 @@ io.on('connection', (socket) => {
         var split = creds.split(':');
         var user = split[0];
         var pass = split[1];
-        var index = users.indexOf(user);
-        if (index > -1) {
-            if (password[index] === pass) {
+        if (users.includes(user)) {
+            if (password.includes(pass)) {
                 socket.emit('login', split[0]);
             }
         }
