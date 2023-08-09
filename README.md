@@ -1,5 +1,7 @@
 # Localhost Chat
 
+WARN! This is not safe. If you do actually try to use this, you probably will break something or become vulnerable to cyber attacks. Even on your local network. DO NOT PORT FORWARD THIS!!!
+
 This is the source code for a locally hosted chat for people on your network to use
 
 ## Start
